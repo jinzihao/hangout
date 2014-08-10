@@ -1,0 +1,24 @@
+﻿<?php
+class a_model extends CI_Model {
+
+  public function __construct()
+  {
+    $this->load->database();
+  }
+	
+	public function getActivity($slug)
+	{ 
+		$row=$this->db->get_where('activities', array('slug' => $slug))->result();
+		return $row[0]->title;
+	}
+	
+	public function checkActivity($slug)
+	{
+		if($this->db->get_where('activities', array('slug' => $slug))->num_rows()>0){return true;}else{return false;}
+	}
+	
+	public function getDescription($id)
+	{
+		$this->db->get_where('activities', array('id' => $id) 
+	
+}

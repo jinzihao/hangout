@@ -1,4 +1,7 @@
 <?php
+/*
+活动显示页，为一静态页面，可通过activities模块post数据加入活动
+*/
 	$this->load->helper('form');
 ?>
 <div class="page-header">

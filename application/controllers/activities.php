@@ -1,4 +1,7 @@
 <?php
+/*
+活动管理相关的后端模块，用于接收前端post的数据，进行数据库操作，并返回json结果
+*/
 class activities extends CI_Controller {
   public function __construct()
   {
@@ -6,6 +9,9 @@ class activities extends CI_Controller {
     $this->load->model('activities_model');
   }
   
+  /*
+  创建活动函数，用于接收/ POST的数据，并返回json格式的执行结果供a模块调用
+  */
   public function create()
 	{
 	  $invalid=0;
@@ -28,16 +34,19 @@ class activities extends CI_Controller {
 	  if ($this->form_validation->run() === FALSE or $invalid===1)
 	  {
 	    $data['success']='0';
-		$this->load->view('activities/error',array("result" => json_encode($data)));
 	  }
 	  else
 	  {
 	    $data['success']='1';
 	  	$data['slug'] = $this->input->post('slug');
-		$this->activities_model->addActivity();
-		$this->load->view('activities/success',array("result" => json_encode($data)));
+			$this->activities_model->addActivity();
 	  }
+	  $this->load->view('activities/status',array("result" => json_encode($data)));
 	}
+  
+  /*
+  加入活动函数，用于接收/a/{slug} POST的数据，返回结果为json格式，供a模块调用
+  */
 	public function join()
 	{
 	  $invalid=0;
@@ -70,7 +79,7 @@ class activities extends CI_Controller {
 			$data['status']='0'; //success	
 		}
 	  }
-	$this->load->view('a/status',array("result" => json_encode($data)));
+	$this->load->view('activities/status',array("result" => json_encode($data)));
 	}
 }
 ?>

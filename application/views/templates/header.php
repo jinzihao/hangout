@@ -1,3 +1,8 @@
+<?php
+/*
+首页模板(header)，加载Bootstrap和相关的JavaScript
+*/
+?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>

@@ -1,4 +1,7 @@
 ﻿<?php
+/*
+活动管理相关功能
+*/
 class activities_model extends CI_Model {
 
   public function __construct()

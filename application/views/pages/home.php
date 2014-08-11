@@ -1,7 +1,9 @@
 <?php
+/*
+首页，目前为一静态页面，提供一个form向activities/create提交数据
+*/
 	$this->load->helper('form');
 ?>
-
 <div class="page-header">
   <h1>Hangout<sup><small> α</small></sup></h1>
 </div>
@@ -84,4 +86,3 @@
     </div>
   </div>
 </form>
-

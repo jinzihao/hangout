@@ -1,5 +1,11 @@
 <?php
+/*
+页面加载模块，用于加载首页及其他非功能性页面
+*/
 class Pages extends CI_Controller {
+	/*
+	页面加载函数，默认加载主页
+	*/
 	public function view($page = 'home')
 	{
 		 if ( ! file_exists(APPPATH.'/views/pages/'.$page.'.php'))

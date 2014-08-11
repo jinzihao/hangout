@@ -1,3 +1,8 @@
+<?php
+/*
+活动显示页模板(header)，加载Bootstrap和相关JavaScript
+*/
+?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -10,3 +15,4 @@
 </head>
 <body>
 	<div class="container">
+		

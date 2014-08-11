@@ -122,6 +122,7 @@ class api extends CI_Controller {
   ·µ»ØÄÚÈÝ£º{"slug":"%slug%"}
 	*/
 	public function getSlug($id)
+	{
 		$data['slug']=$this->api_model->getSlug($id);
 		$this->load->view('api/status',array("result" => json_encode($data)));
 	}

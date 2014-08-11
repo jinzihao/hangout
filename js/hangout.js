@@ -76,5 +76,5 @@ function createActivity_check(result){
 }
 
 function generateSlug(instr){
-	$.post("utils/slug",{title:instr},function(data){document.getElementById("slug").value=data;});
+	$.post("utils/generateSlug",{title:instr},function(data){document.getElementById("slug").value=data;});
 }

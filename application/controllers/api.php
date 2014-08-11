@@ -119,7 +119,7 @@ class api extends CI_Controller {
   方法：GET /api/getSlug
   参数：id
   返回类型：json
-  返回内容：{"slug":"slug"}
+  返回内容：{"slug":"%slug%"}
 	*/
 	public function getSlug($id)
 		$data['slug']=$this->api_model->getSlug($id);

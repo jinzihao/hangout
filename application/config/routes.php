@@ -38,7 +38,7 @@
 |
 */
 
-
+$route['default_controller'] = 'Create/index';
 /*$route['activities/(:any)'] = 'activities/$1';
 $route['a/join'] = 'a/join';
 $route['a/(:any)'] = 'a/view/$1';
@@ -46,7 +46,7 @@ $route['a'] = 'a/view';
 $route['api'] = 'api';
 $route['api/(:any)'] = 'api/$1';
 $route['utils/(:any)'] = 'utils/$1';
-$route['default_controller'] = 'pages/view';
+
 $route['(:any)'] = 'pages/view/$1';*/
 
 /* End of file routes.php */

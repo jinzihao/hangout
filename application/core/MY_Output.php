@@ -12,6 +12,18 @@
 
 class MY_Output extends CI_Output{
 
+	
+	public function _display($output = ''){
+		parent::_display($output);
+		// If Smarty is active - NOTE: $this->output->enable_profiler(TRUE) active Smarty debug to simplify
+		if (class_exists('CI_Controller') && class_exists('Smarty_Internal_Debug') && (config_item('smarty_debug') || $this->enable_profiler))
+		{
+			$CI =& get_instance();
+			Smarty_Internal_Debug::display_debug( $CI->smarty);
+		}
+	}
+
+
 	/**
 	 * 快速输出JSON数据，使用CI原生方法
 	 * @param  [type] $data [数据]

@@ -64,7 +64,9 @@ $autoload['libraries'] = array();
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array();
+$autoload['helper'] = array(
+	'output',	//加载输出扩展函数，by Daniel 2014-8-11 13:52:05
+	);
 
 
 /*

@@ -7,6 +7,7 @@ class api extends CI_Controller {
   {
     parent::__construct();
     $this->load->model('api_model');
+    $this->load->library('session');
   }
 	
 	/*
@@ -177,6 +178,28 @@ class api extends CI_Controller {
 	{
 		$data['info']=$this->api_model->getActivityInfo($id);
 		$this->load->view('api/status',array("result" => json_encode($data)));
+	}
+	
+	/*
+	功能：登录到活动后台管理(未完成)
+	方法：POST /api/adminLogin
+	参数：id,password
+	返回类型：json
+	返回内容：{"status":["0","1"]}
+	*/
+	public function adminLogin()
+	{
+		$id=$this->input->post('id');
+		$password=$this->input->post('password');
+		if($this->api_model->checkAdminPassword($id,$password)==true)
+		{
+			$data['status']="0";
+		}
+		else
+		{
+			$data['status']="1";
+		}
+		
 	}
 }
 ?>

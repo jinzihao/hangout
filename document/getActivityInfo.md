@@ -13,4 +13,4 @@ id|是|活动ID
 ---|---
 info|活动描述文字
 #####例子
-> http://hangout.jinzihao.info/api/getActivityInfo?id=1
+> http://hangout.jinzihao.info/api/getActivityInfo/1

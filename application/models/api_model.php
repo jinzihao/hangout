@@ -100,6 +100,7 @@ class api_model extends CI_Model {
 	*/
 	public function getID($slug)
 	{
+		if(checkActivitySlug($slug)==false){return "";}
 		$row=$this->db->get_where('activities', array('slug' => $slug))->result(); 
 		return $row[0]->id;
 	}
@@ -107,8 +108,9 @@ class api_model extends CI_Model {
 	/*
 	由id查询活动slug
 	*/
-	public function getSlug($slug)
+	public function getSlug($id)
 	{
+		if(checkActivityID($id)==false){return "";}
 		$row=$this->db->get_where('activities', array('id' => $id))->result(); 
 		return $row[0]->slug;
 	}
@@ -118,6 +120,7 @@ class api_model extends CI_Model {
 	*/
 	public function getActivityTitle($id)
 	{ 
+		if(checkActivityID($id)==false){return "";}
 		$row=$this->db->get_where('activities', array('id' => $id))->result();
 		return $row[0]->title;
 	}
@@ -127,7 +130,24 @@ class api_model extends CI_Model {
 	*/
 	public function getActivityInfo($id)
 	{
+		if(checkActivityID($id)==false){return "";}
 		$row=$this->db->get_where('model_info', array('id' => $id))->result(); 
 		return $row[0]->description;
+	}
+	
+	/*
+	检查活动管理密码是否正确
+	*/
+	public function checkAdminPassword($id,$password)
+	{
+		$row=$this->db->get_where('activities', array('id' => $id))->result();
+		if($row[0]->$password==sha1($password))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

@@ -13,4 +13,4 @@ slug|是|活动slug
 ---|---
 exist|是否存在["0"为不存在,"1"为存在]
 #####例子
-> http://hangout.jinzihao.info/api/checkActivitySlug?slug=test
+> http://hangout.jinzihao.info/api/checkActivitySlug/test

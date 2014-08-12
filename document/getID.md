@@ -13,4 +13,4 @@ slug|是|活动slug
 ---|---
 id|活动ID
 #####例子
-> http://hangout.jinzihao.info/api/getID?slug=test
+> http://hangout.jinzihao.info/api/getID/test

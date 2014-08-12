@@ -13,4 +13,4 @@ id|是|活动ID
 ---|---
 exist|是否存在["0"为不存在,"1"为存在]
 #####例子
-> http://hangout.jinzihao.info/api/checkActivityID?id=1
+> http://hangout.jinzihao.info/api/checkActivityID/1

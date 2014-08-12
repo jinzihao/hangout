@@ -148,7 +148,7 @@ class api extends CI_Controller {
   返回类型：json
   返回内容：{"exist":["0","1"]}
 	*/
-	public function checkActivitySlug($id)
+	public function checkActivitySlug($slug)
 	{
 		$data['exist']=strval(intval($this->api_model->checkActivitySlug($slug)));
 		$this->load->view('api/status',array("result" => json_encode($data)));

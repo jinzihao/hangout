@@ -140,7 +140,6 @@ class api_model extends CI_Model {
 	*/
 	public function checkAdminPassword($id,$password)
 	{
-		if(checkActivityID($id)==false){return "";}
 		$row=$this->db->get_where('activities', array('id' => $id))->result();
 		if($row[0]->$password==sha1($password))
 		{

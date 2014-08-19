@@ -269,7 +269,7 @@ class api extends CI_Controller {
 	方法：POST /api/updateActivitySlug
 	参数：id,slug
 	返回类型：json
-	返回内容：{"status":["0","1"],"slugError":["0","1"],"loginError":["0","1"]}
+	返回内容：{"status":["0","1"]}
 	*/	
 	public function updateActivitySlug()
 	{

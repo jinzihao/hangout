@@ -205,10 +205,10 @@ class api_model extends CI_Model {
 	public function updateActivitySlug($id,$slug)
 	{
 		$data = array(
-			'slug' => $slug
+			'description' => $info
 		);
 	$this->db->where('id',$id);
-  $this->db->update('activities', $data);
+  $this->db->update('model_info', $data);
   return true;
 	}
 }

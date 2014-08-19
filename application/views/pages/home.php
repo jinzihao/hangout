@@ -39,7 +39,7 @@
 	  <div id="slug_group">
 		<label for="slug" class="col-sm-3 control-label">活动主页</label>
 		<div class="input-group col-sm-6">
-		  <span class="input-group-addon input-lg">http://hangout.jinzihao.info/a/</span>
+		  <span class="input-group-addon input-lg">http://hangout.org.cn/a/</span>
 		  <input class="form-control input-lg" type="text" id="slug" name="slug" placeholder="">
 		</div>
 	  </div>

@@ -7,7 +7,6 @@ class api extends CI_Controller {
   {
     parent::__construct();
     $this->load->model('api_model');
-    $this->load->library('session');
   }
 	
 	/*
@@ -181,7 +180,7 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	功能：登录到活动后台管理(未完成)
+	功能：登录到活动后台管理
 	方法：POST /api/adminLogin
 	参数：id,password
 	返回类型：json
@@ -194,12 +193,98 @@ class api extends CI_Controller {
 		if($this->api_model->checkAdminPassword($id,$password)==true)
 		{
 			$data['status']="0";
+			$this->session->set_userdata(array(
+				'adminid' => $id
+				));
 		}
 		else
 		{
 			$data['status']="1";
 		}
-		
+		$this->load->view('api/status',array("result" => json_encode($data)));
+	}
+
+	/*
+	功能：活动后台管理登出
+	方法：GET /api/adminLogout
+	参数：无
+	返回类型：json
+	返回内容：{"status":["0","1"]}
+	*/	
+	public function adminLogout()
+	{
+		$this->session->unset_userdata('adminid');
+		$data['status']="0";
+		$this->load->view('api/status',array("result" => json_encode($data)));
+	}
+	
+	/*
+	功能：修改活动标题
+	方法：POST /api/updateActivityTitle
+	参数：id,title
+	返回类型：json
+	返回内容：{"status":["0","1"]}
+	*/	
+	public function updateActivityTitle()
+	{
+		$id=$this->input->post('id');
+		if($this->api_model->checkAdminLoggedIn($id)==true)
+		{
+			$title=$this->input->post('title');
+			$this->api_model->updateActivityTitle($id,$title);
+			$data['status']="0";
+		}
+		else
+		{
+			$data['status']="1";
+		}
+		$this->load->view('api/status',array("result" => json_encode($data)));
+	}
+	
+	/*
+	功能：修改活动信息
+	方法：POST /api/updateActivityInfo
+	参数：id,info
+	返回类型：json
+	返回内容：{"status":["0","1"]}
+	*/	
+	public function updateActivityInfo()
+	{
+		$id=$this->input->post('id');
+		if($this->api_model->checkAdminLoggedIn($id)==true)
+		{
+			$info=$this->input->post('info');
+			$this->api_model->updateActivityInfo($id,$info);
+			$data['status']="0";
+		}
+		else
+		{
+			$data['status']="1";
+		}
+		$this->load->view('api/status',array("result" => json_encode($data)));
+	}
+	
+	/*
+	功能：修改活动信息
+	方法：POST /api/updateActivitySlug
+	参数：id,slug
+	返回类型：json
+	返回内容：{"status":["0","1"]}
+	*/	
+	public function updateActivitySlug()
+	{
+		$id=$this->input->post('id');
+		$slug=$this->input->post('slug');
+		if($this->api_model->checkAdminLoggedIn($id)==true && $this->api_model->checkActivitySlug($slug)==false)
+		{
+			$this->api_model->updateActivitySlug($id,$slug);
+			$data['status']="0";
+		}
+		else
+		{
+			$data['status']="1";
+		}
+		$this->load->view('api/status',array("result" => json_encode($data)));
 	}
 }
 ?>

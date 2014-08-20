@@ -213,8 +213,15 @@ class api extends CI_Controller {
 	*/	
 	public function adminLogout()
 	{
-		$this->session->unset_userdata('adminid');
-		$data['status']="0";
+		if($this->session->userdata('adminid')!==false)
+		{
+			$this->session->unset_userdata('adminid');
+			$data['status']="0";
+		}
+		else
+		{
+			$data['status']="1";
+		}
 		$this->load->view('api/status',array("result" => json_encode($data)));
 	}
 	
@@ -265,7 +272,7 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	功能：修改活动信息
+	功能：修改活动slug
 	方法：POST /api/updateActivitySlug
 	参数：id,slug
 	返回类型：json
@@ -296,6 +303,84 @@ class api extends CI_Controller {
 
 			$this->api_model->updateActivitySlug($id,$slug);
 			$data['status']="0";
+		}
+		else
+		{
+			$data['status']="1";
+		}
+		$this->load->view('api/status',array("result" => json_encode($data)));
+	}
+	
+	/*
+	功能：用户登录
+	方法：POST /api/userLogin
+	参数：id,username,password
+	返回类型：json
+	返回内容：{"status":["0","1"]}
+	*/	
+	public function userLogin()
+	{
+		$id=$this->input->post('id');
+		$username=$this->input->post('username');
+		$password=$this->input->post('password');
+		if($this->api_model->checkUserPassword($id,$username,$password)===true)
+		{
+			$this->session->set_userdata(array(
+				"activity".$id => $username
+				));
+			$data['status']="0";
+		}
+		else
+		{
+			$data['status']=$this->api_model->checkUserPassword($id,$username,$password);
+		}
+		$this->load->view('api/status',array("result" => json_encode($data)));
+	}
+	
+	/*
+	功能：用户登出
+	方法：GET /api/userLogout
+	参数：id
+	返回类型：json
+	返回内容：{"status":["0","1"]}
+	*/	
+	public function userLogout($id)
+	{
+		if($this->api_model->checkUserLoggedIn($id)==true)
+		{
+			$this->session->unset_userdata('activity'.$id);
+			$data['status']="0";
+		}
+		else
+		{
+			$data['status']="1";
+		}
+		$this->load->view('api/status',array("result" => json_encode($data)));
+	}
+	
+	/*
+	功能：用户退出活动
+	方法：POST /api/userUnregister
+	参数：id,username
+	返回类型：json
+	返回内容：{"status":["0","1"]}
+	*/	
+	public function userUnregister()
+	{
+		$id=$this->input->post('id');
+		$username=$this->input->post('username');
+		if($this->api_model->checkUserLoggedIn($id,$username)==true)
+		{
+			$r=$this->api_model->userUnregister($id,$username);
+			if($r==true)
+			{
+				$this->session->unset_userdata('activity'.$id);
+				$data['status']="0";
+			}
+			else
+			{
+				$data['status']="1";
+			}
 		}
 		else
 		{

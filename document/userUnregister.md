@@ -1,15 +1,15 @@
-###活动管理员登出
+###活动参与者退出活动
 
 #####请求地址 
-/api/adminLogout
+/api/userUnregister
 #####请求方式
-GET
+POST
 #####参数说明
 参数|是否必须|说明
 ---|---|---
+id|是|活动id
+username|是|活动参与者在该活动中的用户名
 #####返回值
 返回值|说明
 ---|---
 status|执行结果,0为成功,1为未登录
-#####例子
-> http://hangout.jinzihao.info/api/adminLogout

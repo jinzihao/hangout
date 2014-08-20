@@ -8,6 +8,7 @@ class api_model extends CI_Model {
   {
     $this->load->database();
     $this->load->library('session');
+    $this->load->library('encoding');
   }
   
   /*
@@ -210,5 +211,81 @@ class api_model extends CI_Model {
 	$this->db->where('id',$id);
   $this->db->update('activities', $data);
   return true;
+	}
+	
+	/*
+	检查用户密码是否正确
+	*/
+	public function checkUserPassword($id,$username,$password)
+	{
+		$row=$this->db->get_where('model_users', array('id' => $id))->result();
+		$userdata=$row[0]->userdata;
+		$userarr=explode("\r\n",$userdata);
+		for($i=0;$i<=count($userarr)-1;$i++)
+		{
+			if($userarr[$i]==$this->encoding->utf8encode($this->encoding->convert_entities(str_replace('\\','%',$username))) && $userarr[$i+1]==sha1($password))
+			{
+				return true;
+			}
+		}
+			return false;
+	}
+	
+	/*
+	检查用户是否登录
+	*/
+	public function checkUserLoggedIn($id)
+	{
+		if($this->session->userdata('activity'.$id)!==false)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/*
+	检查用户是否在活动注册
+	*/
+	public function checkUserRegistered($id,$username)
+	{
+		$row=$this->db->get_where('model_users', array('id' => $id))->result();
+		$userdata=$row[0]->userdata;
+		$userarr=explode("\r\n",$userdata);
+		for($i=0;$i<=count($userarr)-1;$i=$i+2)
+		{
+			if($userarr[$i]==$this->encoding->utf8encode($this->encoding->convert_entities(str_replace('\\','%',$username))))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/*
+	用户退出活动
+	*/
+	public function userUnregister($id,$username)
+	{
+		$row=$this->db->get_where('model_users', array('id' => $id))->result();
+		$userdata=$row[0]->userdata;
+		$userarr=explode("\r\n",$userdata);
+		for($i=0;$i<=count($userarr)-1;$i++)
+		{
+			if($userarr[$i]==$this->encoding->utf8encode($this->encoding->convert_entities(str_replace('\\','%',$username))))
+			{
+				array_splice($userarr,$i,2);
+				$userdata=implode("\r\n",$userarr)."\r\n";
+				$data = array(
+					'userdata' => $userdata
+				);
+				$this->db->where('id',$id);
+  			$this->db->update('model_users', $data);
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -108,7 +108,7 @@ class api_model extends CI_Model {
 	*/
 	public function getID($slug)
 	{
-		if(checkActivitySlug($slug)==false){return "";}
+		if($this->api_model->checkActivitySlug($slug)==false){return "";}
 		$row=$this->db->get_where('activities', array('slug' => $slug))->result(); 
 		return $row[0]->id;
 	}
@@ -118,7 +118,7 @@ class api_model extends CI_Model {
 	*/
 	public function getSlug($id)
 	{
-		if(checkActivityID($id)==false){return "";}
+		if($this->api_model->checkActivityID($id)==false){return "";}
 		$row=$this->db->get_where('activities', array('id' => $id))->result(); 
 		return $row[0]->slug;
 	}
@@ -287,5 +287,242 @@ class api_model extends CI_Model {
 			}
 		}
 		return false;
+	}
+	
+	/*
+  获得活动内的用户列表(管理员和用户均可以查看)
+  */
+  public function getUserList($id)
+	{
+		if($this->api_model->checkAdminLoggedIn($id)==true || $this->api_model->checkUserLoggedIn($id)==true)
+		{
+			$result="";
+			$row=$this->db->get_where('model_users', array('id' => $id))->result();
+			$userdata=$row[0]->userdata;
+			$userarr=explode("\r\n",$userdata);
+			for($i=0;$i<=count($userarr)-1;$i=$i+2)
+			{
+				$json[$i/2+1]=$userarr[$i];
+			}
+			$json['status']="0";
+		}
+		else
+		{
+			$json['status']="1";
+		}
+		return json_encode($json);
+	}
+	
+	/*
+	设置活动的时间表模块状态
+	*/
+	public function setModelTimetable($id,$state)
+	{
+		if($this->api_model->checkActivityID($id)==true)
+		{
+			$data['iderror']="0";
+		}
+		else
+		{
+			$data['iderror']="1";
+		}
+		if($this->api_model->checkAdminLoggedIn($id)==true)
+		{
+			$data['loginerror']="0";
+		}
+		else
+		{
+			$data['loginerror']="1";
+		}
+		if($data['loginerror']=="1"||$data['loginerror']=="1")
+		{
+			$data['status']="1";
+		}
+		else
+		{
+			$data['status']="0";
+			$db = array(
+			'model_timetable' => $state
+			);
+			$this->db->where('id',$id);
+			$this->db->update('activities', $db);
+		}
+		return json_encode($data);
+	}
+
+	/*
+	设置活动的聊天室模块状态
+	*/
+	public function setModelChatroom($id,$state)
+	{
+		if($this->api_model->checkActivityID($id)==true)
+		{
+			$data['iderror']="0";
+		}
+		else
+		{
+			$data['iderror']="1";
+		}
+		if($this->api_model->checkAdminLoggedIn($id)==true)
+		{
+			$data['loginerror']="0";
+		}
+		else
+		{
+			$data['loginerror']="1";
+		}
+		if($data['loginerror']=="1"||$data['loginerror']=="1")
+		{
+			$data['status']="1";
+		}
+		else
+		{
+			$data['status']="0";
+			$db = array(
+			'model_chatroom' => $state
+			);
+			$this->db->where('id',$id);
+			$this->db->update('activities', $db);
+		}
+		return json_encode($data);
+	}
+	
+	/*
+	设置活动的位置共享模块状态
+	*/
+	public function setModelLocation($id,$state)
+	{
+		if($this->api_model->checkActivityID($id)==true)
+		{
+			$data['iderror']="0";
+		}
+		else
+		{
+			$data['iderror']="1";
+		}
+		if($this->api_model->checkAdminLoggedIn($id)==true)
+		{
+			$data['loginerror']="0";
+		}
+		else
+		{
+			$data['loginerror']="1";
+		}
+		if($data['loginerror']=="1"||$data['loginerror']=="1")
+		{
+			$data['status']="1";
+		}
+		else
+		{
+			$data['status']="0";
+			$db = array(
+			'model_location' => $state
+			);
+			$this->db->where('id',$id);
+			$this->db->update('activities', $db);
+		}
+		return json_encode($data);
+	}
+	
+	/*
+	获得活动的时间表模块状态
+	*/
+	public function getModelTimetable($id)
+	{
+		if($this->api_model->checkActivityID($id)==false)
+		{
+			$data['iderror']="1";
+		}
+		else
+		{
+			$data['iderror']="0";
+		}
+		if($this->api_model->checkAdminLoggedIn($id)==false||$this->api_model->checkUserLoggedIn($id)==false)
+		{
+			$data['loginError']="1";
+		}
+		else
+		{
+			$data['loginError']="0";
+		}
+		if($data['iderror']="1"||$data['loginerror']="1")
+		{
+			$data['status']="1";
+		}
+		else
+		{
+			$data['status']="0";
+		}
+		$row=$this->db->get_where('activities', array('id' => $id))->result(); 
+		$data['state']=$row[0]->model_timetable;
+		return json_encode($data);
+	}
+
+	/*
+	获得活动的聊天室模块状态
+	*/
+	public function getModelChatroom($id)
+	{
+		if($this->api_model->checkActivityID($id)==false)
+		{
+			$data['iderror']="1";
+		}
+		else
+		{
+			$data['iderror']="0";
+		}
+		if($this->api_model->checkAdminLoggedIn($id)==false||$this->api_model->checkUserLoggedIn($id)==false)
+		{
+			$data['loginError']="1";
+		}
+		else
+		{
+			$data['loginError']="0";
+		}
+		if($data['iderror']="1"||$data['loginerror']="1")
+		{
+			$data['status']="1";
+		}
+		else
+		{
+			$data['status']="0";
+		}
+		$row=$this->db->get_where('activities', array('id' => $id))->result(); 
+		$data['state']=$row[0]->model_chatroom;
+		return json_encode($data);
+	}
+	
+	/*
+	获得活动的位置共享模块状态
+	*/
+	public function getModelLocation($id)
+	{
+		if($this->api_model->checkActivityID($id)==false)
+		{
+			$data['iderror']="1";
+		}
+		else
+		{
+			$data['iderror']="0";
+		}
+		if($this->api_model->checkAdminLoggedIn($id)==false||$this->api_model->checkUserLoggedIn($id)==false)
+		{
+			$data['loginError']="1";
+		}
+		else
+		{
+			$data['loginError']="0";
+		}
+		if($data['iderror']="1"||$data['loginerror']="1")
+		{
+			$data['status']="1";
+		}
+		else
+		{
+			$data['status']="0";
+		}
+		$row=$this->db->get_where('activities', array('id' => $id))->result(); 
+		$data['state']=$row[0]->model_location;
+		return json_encode($data);
 	}
 }

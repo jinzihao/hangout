@@ -1,0 +1,53 @@
+﻿功能：活动列表
+方法：GET /api/activityList
+参数：无
+返回类型：json
+返回内容：{"%id%":"%title%"}
+
+功能：加入活动
+方法：POST /api/joinActivity
+参数：username,password1,password2
+返回类型：json
+返回内容：{"status":["0","1","2"],"usernameError":["0","1"],"password1Error":["0","1"],"password2Error":["0","1"],"passwordMismatch":["0","1"]}
+
+功能：创建活动
+方法：POST /api/createActivity
+参数：title,slug,model_timetable,model_chatroom,model_location,password1,password2
+返回类型：json
+返回内容：{"status":["0","1"],"titleError":["0","1"],"slugError":["0","1"],"password1Error":["0","1"],"password2Error":["0","1"],"passwordMismatch":["0","1"],"slugUnavailable":["0","1"]}
+
+功能：由slug查询id
+方法：GET /api/getID
+参数：slug
+返回类型：json
+返回内容：{"id":"%id%"}
+
+功能：由id查询slug
+方法：GET /api/getSlug
+参数：id
+返回类型：json
+返回内容：{"slug":"%slug%"}
+
+功能：检查给定的id是否存在
+方法：GET /api/checkActivityID
+参数：id
+返回类型：json
+返回内容：{"exist":["0","1"]}
+
+功能：检查给定的slug是否存在
+方法：GET /api/checkActivitySlug
+参数：slug
+返回类型：json
+返回内容：{"exist":["0","1"]}
+
+功能：由id查询活动标题
+方法：GET /api/getActivityTitle
+参数：id
+返回类型：json
+返回内容：{"title":"%title%"}
+
+功能：由id查询活动信息
+方法：GET /api/getActivityInfo
+参数：id
+返回类型：json
+返回内容：{"info":"%info%"}

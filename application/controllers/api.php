@@ -24,7 +24,7 @@ class api extends CI_Controller {
 	/*
   功能：加入活动
   方法：POST /api/joinActivity
-  参数：username,password1,password2
+  参数：id,username,password1,password2
   返回类型：json
   返回内容：{"status":["0","1","2"],"usernameError":["0","1"],"password1Error":["0","1"],"password2Error":["0","1"],"passwordMismatch":["0","1"]}
   */
@@ -387,6 +387,185 @@ class api extends CI_Controller {
 			$data['status']="1";
 		}
 		$this->load->view('api/status',array("result" => json_encode($data)));
+	}
+	
+	/*
+	功能：活动管理员获取活动的用户列表
+	方法：GET /api/getUserList
+	参数：id
+	返回类型：json
+	返回内容：{"status":["0","1"],"%id%":"%username%"}
+	*/	
+	public function getUserList($id)
+	{
+		echo $this->api_model->getUserList($id);
+	}
+	
+	/*
+	功能：活动管理员移除用户
+	方法：POST /api/removeUser
+	参数：id,username
+	返回类型：json
+	返回内容：{"status":["0","1"],"loginerror":["0","1"],"usernameerror":["0","1"]}
+	*/	
+	public function removeUser()
+	{
+		$id=$this->input->post('id');
+		$username=$this->input->post('username');
+		if($this->api_model->checkAdminLoggedIn($id)==false)
+		{
+			$data['loginerror']="1";
+		}
+		else
+		{
+			$data['loginerror']="0";
+		}
+		if($this->api_model->checkUserRegistered($id,$username)==false)
+		{
+			$data['usernameerror']="1";
+		}
+		else
+		{
+			$data['usernameerror']="0";
+		}
+		if($data['loginerror']=="1" || $data['usernameerror']=="1")
+		{
+			$data['status']="1";
+		}
+		else
+		{
+			$data['status']="0";
+		}
+		$this->api_model->userUnregister($id,$username); //此处借用用户退出活动的函数，由于先前已检验checkUserRegistered，故此处userUnregister的返回值忽略(因不可能返回false)
+		$this->load->view('api/status',array("result" => json_encode($data)));
+	}
+	
+	/*
+	功能：检查用户是否在一个活动注册
+	方法：POST /api/checkUser
+	参数：id,username
+	返回类型：json
+	返回内容：{"status":["0","1"],"exist":["0","1",""]}
+	*/	
+	public function checkUser()
+	{
+		$id=$this->input->post('id');
+		$username=$this->input->post('username');
+		if($this->api_model->checkAdminLoggedIn($id)==false)
+		{
+			$data['status']="1";
+			$data['exist']="";
+		}
+		else
+		{
+			$data['status']="0";
+			$r=$this->api_model->checkUserRegistered($id,$username); //此处借用其他用户管理功能所使用的一个内部函数
+			if ($r==true)
+			{
+				$data['exist']="1";
+			}
+			else
+			{
+				$data['exist']="0";
+			}
+		}
+		$this->load->view('api/status',array("result" => json_encode($data)));
+	}
+	
+	/*
+	功能：启用/禁用活动的时间表模块
+	方法：POST /api/setModelTimetable
+	参数：id,state
+	返回类型：json
+	返回内容：{"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
+	*/
+	public function setModelTimetable()
+	{
+		$id=$this->input->post('id');
+		$state=$this->input->post('state');
+		if($state!=="1")
+		{
+			$state="0";
+		}
+		$r=$this->api_model->setModelTimetable($id,$state);
+		$this->load->view('api/status',array("result" => $r));
+	}
+	
+	/*
+	功能：启用/禁用活动的聊天室模块
+	方法：POST /api/setModelChatroom
+	参数：id,state
+	返回类型：json
+	返回内容：{"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
+	*/
+	public function setModelChatroom()
+	{
+		$id=$this->input->post('id');
+		$state=$this->input->post('state');
+		if($state!=="1")
+		{
+			$state="0";
+		}
+		$r=$this->api_model->setModelChatroom($id,$state);
+		$this->load->view('api/status',array("result" => $r));
+	}
+	
+	/*
+	功能：启用/禁用活动的位置共享模块
+	方法：POST /api/setModelLocation
+	参数：id,state
+	返回类型：json
+	返回内容：{"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
+	*/
+	public function setModelLocation()
+	{
+		$id=$this->input->post('id');
+		$state=$this->input->post('state');
+		if($state!=="1")
+		{
+			$state="0";
+		}
+		$r=$this->api_model->setModelLocation($id,$state);
+		$this->load->view('api/status',array("result" => $r));
+	}
+	
+	/*
+	功能：查看活动的时间表模块状态
+	方法：GET /api/getModelTimetable
+	参数：id
+	返回类型：json
+	返回内容：{"state":["0","1"],"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
+	*/
+	public function getModelTimetable($id)
+	{
+		$r=$this->api_model->getModelTimetable($id);
+		$this->load->view('api/status',array("result" => $r));
+	}
+	
+	/*
+	功能：查看活动的聊天室模块状态
+	方法：GET /api/getModelChatroom
+	参数：id
+	返回类型：json
+	返回内容：{"state":["0","1"],"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
+	*/
+	public function getModelChatroom($id)
+	{
+		$r=$this->api_model->getModelChatroom($id);
+		$this->load->view('api/status',array("result" => $r));
+	}
+	
+	/*
+	功能：查看活动的位置共享模块状态
+	方法：GET /api/getModelLocation
+	参数：id
+	返回类型：json
+	返回内容：{"state":["0","1"],"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
+	*/
+	public function getModelLocation($id)
+	{
+		$r=$this->api_model->getModelLocation($id);
+		$this->load->view('api/status',array("result" => $r));
 	}
 }
 ?>

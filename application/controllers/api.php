@@ -611,7 +611,15 @@ class api extends CI_Controller {
 		else
 		{
 			$data['status']="0";
-			$this->api_model->addAvailableTime($id,$time1,$time2);
+			$r=$this->api_model->addAvailableTime($id,$time1,$time2);
+			if($r==false)
+			{
+				$data['status']="2";
+			}
+			else
+			{
+				$data['status']="0";
+			}
 		}
 		$this->load->view('api/status',array("result" => json_encode($data)));
 	}
@@ -651,8 +659,15 @@ class api extends CI_Controller {
 		}
 		else
 		{
-			$data['status']="0";
-			$this->api_model->addUnavailableTime($id,$time1,$time2);
+			$r=$this->api_model->addUnavailableTime($id,$time1,$time2);
+			if($r==false)
+			{
+				$data['status']="2";
+			}
+			else
+			{
+				$data['status']="0";
+			}
 		}
 		$this->load->view('api/status',array("result" => json_encode($data)));
 	}

@@ -500,15 +500,27 @@ class api_model extends CI_Model {
 	*/
 	public function addAvailableTime($id,$time1,$time2)
 	{
-		$data = array(
-			'id' => $id,
-			'username' => $this->session->userdata('activity'.$id),
-			'available' => 1,
-			'time1' => $time1,
-			'time2' => $time2
-		);
-		$this->db->insert('model_timetable', $data);
-    return true;
+		$this->db->where('time2 <=', intval($time1));
+		$this->db->where('time2 >=', intval($time2));
+		$this->db->or_where('time1 <=', intval($time1));
+		$this->db->where('time2 >=', intval($time2));
+		$row = $this->db->get('model_timetable')->result();
+		if (count($row)>0)
+		{
+			return false;
+		}
+		else
+		{
+			$data = array(
+				'id' => $id,
+				'username' => $this->session->userdata('activity'.$id),
+				'available' => 1,
+				'time1' => $time1,
+				'time2' => $time2
+			);
+			$this->db->insert('model_timetable', $data);
+	    return true;
+  	}
 	}
 	
 	/*
@@ -516,14 +528,26 @@ class api_model extends CI_Model {
 	*/
 	public function addUnavailableTime($id,$time1,$time2)
 	{
-		$data = array(
-			'id' => $id,
-			'username' => $this->session->userdata('activity'.$id),
-			'available' => 0,
-			'time1' => $time1,
-			'time2' => $time2
-		);
-		$this->db->insert('model_timetable', $data);
-    return true;
+		$this->db->where('time2 <=', intval($time1));
+		$this->db->where('time2 >=', intval($time2));
+		$this->db->or_where('time1 <=', intval($time1));
+		$this->db->where('time2 >=', intval($time2));
+		$row = $this->db->get('model_timetable')->result();
+		if (count($row)>0)
+		{
+			return false;
+		}
+		else
+		{
+			$data = array(
+				'id' => $id,
+				'username' => $this->session->userdata('activity'.$id),
+				'available' => 0,
+				'time1' => $time1,
+				'time2' => $time2
+			);
+			$this->db->insert('model_timetable', $data);
+	    return true;
+	  }
 	}
 }

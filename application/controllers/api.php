@@ -1,6 +1,6 @@
 <?php
 /*
-APIÄ£¿é£¬ÓÃÓÚºÍ¿Í»§¶Ë¼°µÚÈý·½ÍøÕ¾½»»¥£¬ÓÃ»§²»¿É¼û
+APIæ¨¡å—ï¼Œç”¨äºŽå’Œå®¢æˆ·ç«¯åŠç¬¬ä¸‰æ–¹ç½‘ç«™äº¤äº’ï¼Œç”¨æˆ·ä¸å¯è§
 */
 class api extends CI_Controller {
   public function __construct()
@@ -10,23 +10,23 @@ class api extends CI_Controller {
   }
 	
 	/*
-  ¹¦ÄÜ£º»î¶¯ÁÐ±í
-  ·½·¨£ºGET /api/activityList
-  ²ÎÊý£ºÎÞ
-  ·µ»ØÀàÐÍ£ºjson
-  ·µ»ØÄÚÈÝ£º{"%id%":"%title%"}
+  åŠŸèƒ½ï¼šæ´»åŠ¨åˆ—è¡¨
+  æ–¹æ³•ï¼šGET /api/activityList
+  å‚æ•°ï¼šæ— 
+  è¿”å›žç±»åž‹ï¼šjson
+  è¿”å›žå†…å®¹ï¼š{"%id%":"%title%"}
   */
   public function activitylist()
 	{
-		echo $this->api_model->getActivityList();
+		echo $this->encoding->utf8encode($this->encoding->convert_entities(str_replace('\\','%',$this->api_model->getActivityList())));
 	}
 	
 	/*
-  ¹¦ÄÜ£º¼ÓÈë»î¶¯
-  ·½·¨£ºPOST /api/joinActivity
-  ²ÎÊý£ºid,username,password1,password2
-  ·µ»ØÀàÐÍ£ºjson
-  ·µ»ØÄÚÈÝ£º{"status":["0","1","2"],"usernameError":["0","1"],"password1Error":["0","1"],"password2Error":["0","1"],"passwordMismatch":["0","1"]}
+  åŠŸèƒ½ï¼šåŠ å…¥æ´»åŠ¨
+  æ–¹æ³•ï¼šPOST /api/joinActivity
+  å‚æ•°ï¼šid,username,password1,password2
+  è¿”å›žç±»åž‹ï¼šjson
+  è¿”å›žå†…å®¹ï¼š{"status":["0","1","2"],"usernameError":["0","1"],"password1Error":["0","1"],"password2Error":["0","1"],"passwordMismatch":["0","1"]}
   */
 	public function joinActivity()
 	{
@@ -35,9 +35,9 @@ class api extends CI_Controller {
 	  $this->load->helper('form');
 	  $this->load->library('form_validation');
 	  
-	  $this->form_validation->set_rules('username', 'ÐÕÃû', 'required|trim|xss_clean|max_length[128]');
-	  $this->form_validation->set_rules('password1', 'ÃÜÂë', 'required');
-	  $this->form_validation->set_rules('password2', 'ÃÜÂë(ÖØ¸´)', 'required');
+	  $this->form_validation->set_rules('username', 'å§“å', 'required|trim|xss_clean|max_length[128]');
+	  $this->form_validation->set_rules('password1', 'å¯†ç ', 'required');
+	  $this->form_validation->set_rules('password2', 'å¯†ç (é‡å¤)', 'required');
 	  
 	  if (strlen(trim($this->input->post('username')))==0){$data['usernameError']='1';$invalid=1;}else{$data['usernameError']='0';}
 	  if (strlen(trim($this->input->post('password1')))==0){$data['password1Error']='1';$invalid=1;}else{$data['password1Error']='0';}
@@ -64,11 +64,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-  ¹¦ÄÜ£º´´½¨»î¶¯
-  ·½·¨£ºPOST /api/createActivity
-  ²ÎÊý£ºtitle,slug,model_timetable,model_chatroom,model_location,password1,password2
-  ·µ»ØÀàÐÍ£ºjson
-  ·µ»ØÄÚÈÝ£º{"status":["0","1"],"titleError":["0","1"],"slugError":["0","1"],"password1Error":["0","1"],"password2Error":["0","1"],"passwordMismatch":["0","1"],"slugUnavailable":["0","1"]}
+  åŠŸèƒ½ï¼šåˆ›å»ºæ´»åŠ¨
+  æ–¹æ³•ï¼šPOST /api/createActivity
+  å‚æ•°ï¼štitle,slug,model_timetable,model_chatroom,model_location,password1,password2
+  è¿”å›žç±»åž‹ï¼šjson
+  è¿”å›žå†…å®¹ï¼š{"status":["0","1"],"titleError":["0","1"],"slugError":["0","1"],"password1Error":["0","1"],"password2Error":["0","1"],"passwordMismatch":["0","1"],"slugUnavailable":["0","1"]}
   */
 	public function createActivity()
 	{
@@ -77,10 +77,10 @@ class api extends CI_Controller {
 	  $this->load->helper('form');
 	  $this->load->library('form_validation');
 	  
-	  $this->form_validation->set_rules('title', '»î¶¯Ãû³Æ', 'required|trim|xss_clean|max_length[128]');
-	  $this->form_validation->set_rules('slug', '»î¶¯Ö÷Ò³', 'required|trim|xss_clean|max_length[128]');
-	  $this->form_validation->set_rules('password1', '¹ÜÀíÃÜÂë', 'required');
-	  $this->form_validation->set_rules('password2', '¹ÜÀíÃÜÂë(ÖØ¸´)', 'required');
+	  $this->form_validation->set_rules('title', 'æ´»åŠ¨åç§°', 'required|trim|xss_clean|max_length[128]');
+	  $this->form_validation->set_rules('slug', 'æ´»åŠ¨ä¸»é¡µ', 'required|trim|xss_clean|max_length[128]');
+	  $this->form_validation->set_rules('password1', 'ç®¡ç†å¯†ç ', 'required');
+	  $this->form_validation->set_rules('password2', 'ç®¡ç†å¯†ç (é‡å¤)', 'required');
 	  
 	  if (strlen(trim($this->input->post('title')))==0){$data['titleError']='1';$invalid=1;}else{$data['titleError']='0';}
 	  if (strlen(trim($this->input->post('slug')))==0){$data['slugError']='1';$invalid=1;}else{$data['slugError']='0';}
@@ -102,11 +102,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£ºÓÉslug²éÑ¯id
-  ·½·¨£ºGET /api/getID
-  ²ÎÊý£ºslug
-  ·µ»ØÀàÐÍ£ºjson
-  ·µ»ØÄÚÈÝ£º{"id":"%id%"}
+	åŠŸèƒ½ï¼šç”±slugæŸ¥è¯¢id
+  æ–¹æ³•ï¼šGET /api/getID
+  å‚æ•°ï¼šslug
+  è¿”å›žç±»åž‹ï¼šjson
+  è¿”å›žå†…å®¹ï¼š{"id":"%id%"}
 	*/
 	public function getID($slug)
 	{
@@ -115,11 +115,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£ºÓÉid²éÑ¯slug
-  ·½·¨£ºGET /api/getSlug
-  ²ÎÊý£ºid
-  ·µ»ØÀàÐÍ£ºjson
-  ·µ»ØÄÚÈÝ£º{"slug":"%slug%"}
+	åŠŸèƒ½ï¼šç”±idæŸ¥è¯¢slug
+  æ–¹æ³•ï¼šGET /api/getSlug
+  å‚æ•°ï¼šid
+  è¿”å›žç±»åž‹ï¼šjson
+  è¿”å›žå†…å®¹ï¼š{"slug":"%slug%"}
 	*/
 	public function getSlug($id)
 	{
@@ -128,11 +128,11 @@ class api extends CI_Controller {
 	}
 
 	/*
-	¹¦ÄÜ£º¼ì²é¸ø¶¨µÄidÊÇ·ñ´æÔÚ
-  ·½·¨£ºGET /api/checkActivityID
-  ²ÎÊý£ºid
-  ·µ»ØÀàÐÍ£ºjson
-  ·µ»ØÄÚÈÝ£º{"exist":["0","1"]}
+	åŠŸèƒ½ï¼šæ£€æŸ¥ç»™å®šçš„idæ˜¯å¦å­˜åœ¨
+  æ–¹æ³•ï¼šGET /api/checkActivityID
+  å‚æ•°ï¼šid
+  è¿”å›žç±»åž‹ï¼šjson
+  è¿”å›žå†…å®¹ï¼š{"exist":["0","1"]}
 	*/
 	public function checkActivityID($id)
 	{
@@ -141,11 +141,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£º¼ì²é¸ø¶¨µÄslugÊÇ·ñ´æÔÚ
-  ·½·¨£ºGET /api/checkActivitySlug
-  ²ÎÊý£ºslug
-  ·µ»ØÀàÐÍ£ºjson
-  ·µ»ØÄÚÈÝ£º{"exist":["0","1"]}
+	åŠŸèƒ½ï¼šæ£€æŸ¥ç»™å®šçš„slugæ˜¯å¦å­˜åœ¨
+  æ–¹æ³•ï¼šGET /api/checkActivitySlug
+  å‚æ•°ï¼šslug
+  è¿”å›žç±»åž‹ï¼šjson
+  è¿”å›žå†…å®¹ï¼š{"exist":["0","1"]}
 	*/
 	public function checkActivitySlug($slug)
 	{
@@ -154,11 +154,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£ºÓÉid²éÑ¯»î¶¯±êÌâ
-	·½·¨£ºGET /api/getActivityTitle
-  ²ÎÊý£ºid
-  ·µ»ØÀàÐÍ£ºjson
-  ·µ»ØÄÚÈÝ£º{"title":"%title%"}
+	åŠŸèƒ½ï¼šç”±idæŸ¥è¯¢æ´»åŠ¨æ ‡é¢˜
+	æ–¹æ³•ï¼šGET /api/getActivityTitle
+  å‚æ•°ï¼šid
+  è¿”å›žç±»åž‹ï¼šjson
+  è¿”å›žå†…å®¹ï¼š{"title":"%title%"}
 	*/
 	public function getActivityTitle($id)
 	{ 
@@ -167,11 +167,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£ºÓÉid²éÑ¯»î¶¯ÐÅÏ¢
-	·½·¨£ºGET /api/getActivityInfo
-  ²ÎÊý£ºid
-  ·µ»ØÀàÐÍ£ºjson
-  ·µ»ØÄÚÈÝ£º{"info":"%info%"}
+	åŠŸèƒ½ï¼šç”±idæŸ¥è¯¢æ´»åŠ¨ä¿¡æ¯
+	æ–¹æ³•ï¼šGET /api/getActivityInfo
+  å‚æ•°ï¼šid
+  è¿”å›žç±»åž‹ï¼šjson
+  è¿”å›žå†…å®¹ï¼š{"info":"%info%"}
 	*/
 	public function getActivityInfo($id)
 	{
@@ -180,11 +180,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£ºµÇÂ¼µ½»î¶¯ºóÌ¨¹ÜÀí
-	·½·¨£ºPOST /api/adminLogin
-	²ÎÊý£ºid,password
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"status":["0","1"]}
+	åŠŸèƒ½ï¼šç™»å½•åˆ°æ´»åŠ¨åŽå°ç®¡ç†
+	æ–¹æ³•ï¼šPOST /api/adminLogin
+	å‚æ•°ï¼šid,password
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"status":["0","1"]}
 	*/
 	public function adminLogin()
 	{
@@ -205,11 +205,11 @@ class api extends CI_Controller {
 	}
 
 	/*
-	¹¦ÄÜ£º»î¶¯ºóÌ¨¹ÜÀíµÇ³ö
-	·½·¨£ºGET /api/adminLogout
-	²ÎÊý£ºÎÞ
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"status":["0","1"]}
+	åŠŸèƒ½ï¼šæ´»åŠ¨åŽå°ç®¡ç†ç™»å‡º
+	æ–¹æ³•ï¼šGET /api/adminLogout
+	å‚æ•°ï¼šæ— 
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"status":["0","1"]}
 	*/	
 	public function adminLogout()
 	{
@@ -226,11 +226,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£ºÐÞ¸Ä»î¶¯±êÌâ
-	·½·¨£ºPOST /api/updateActivityTitle
-	²ÎÊý£ºid,title
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"status":["0","1"]}
+	åŠŸèƒ½ï¼šä¿®æ”¹æ´»åŠ¨æ ‡é¢˜
+	æ–¹æ³•ï¼šPOST /api/updateActivityTitle
+	å‚æ•°ï¼šid,title
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"status":["0","1"]}
 	*/	
 	public function updateActivityTitle()
 	{
@@ -249,11 +249,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£ºÐÞ¸Ä»î¶¯ÐÅÏ¢
-	·½·¨£ºPOST /api/updateActivityInfo
-	²ÎÊý£ºid,info
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"status":["0","1"]}
+	åŠŸèƒ½ï¼šä¿®æ”¹æ´»åŠ¨ä¿¡æ¯
+	æ–¹æ³•ï¼šPOST /api/updateActivityInfo
+	å‚æ•°ï¼šid,info
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"status":["0","1"]}
 	*/	
 	public function updateActivityInfo()
 	{
@@ -272,11 +272,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£ºÐÞ¸Ä»î¶¯slug
-	·½·¨£ºPOST /api/updateActivitySlug
-	²ÎÊý£ºid,slug
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"status":["0","1"],"slugError":["0","1"],"loginError":["0","1"]}
+	åŠŸèƒ½ï¼šä¿®æ”¹æ´»åŠ¨slug
+	æ–¹æ³•ï¼šPOST /api/updateActivitySlug
+	å‚æ•°ï¼šid,slug
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"status":["0","1"],"slugError":["0","1"],"loginError":["0","1"]}
 	*/	
 	public function updateActivitySlug()
 	{
@@ -312,11 +312,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£ºÓÃ»§µÇÂ¼
-	·½·¨£ºPOST /api/userLogin
-	²ÎÊý£ºid,username,password
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"status":["0","1"]}
+	åŠŸèƒ½ï¼šç”¨æˆ·ç™»å½•
+	æ–¹æ³•ï¼šPOST /api/userLogin
+	å‚æ•°ï¼šid,username,password
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"status":["0","1"]}
 	*/	
 	public function userLogin()
 	{
@@ -338,11 +338,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£ºÓÃ»§µÇ³ö
-	·½·¨£ºGET /api/userLogout
-	²ÎÊý£ºid
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"status":["0","1"]}
+	åŠŸèƒ½ï¼šç”¨æˆ·ç™»å‡º
+	æ–¹æ³•ï¼šGET /api/userLogout
+	å‚æ•°ï¼šid
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"status":["0","1"]}
 	*/	
 	public function userLogout($id)
 	{
@@ -359,11 +359,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£ºÓÃ»§ÍË³ö»î¶¯
-	·½·¨£ºPOST /api/userUnregister
-	²ÎÊý£ºid,username
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"status":["0","1"]}
+	åŠŸèƒ½ï¼šç”¨æˆ·é€€å‡ºæ´»åŠ¨
+	æ–¹æ³•ï¼šPOST /api/userUnregister
+	å‚æ•°ï¼šid,username
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"status":["0","1"]}
 	*/	
 	public function userUnregister()
 	{
@@ -390,23 +390,23 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£º»î¶¯¹ÜÀíÔ±»ñÈ¡»î¶¯µÄÓÃ»§ÁÐ±í
-	·½·¨£ºGET /api/getUserList
-	²ÎÊý£ºid
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"status":["0","1"],"%id%":"%username%"}
+	åŠŸèƒ½ï¼šæ´»åŠ¨ç®¡ç†å‘˜èŽ·å–æ´»åŠ¨çš„ç”¨æˆ·åˆ—è¡¨
+	æ–¹æ³•ï¼šGET /api/getUserList
+	å‚æ•°ï¼šid
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"status":["0","1"],"%id%":"%username%"}
 	*/	
 	public function getUserList($id)
 	{
-		echo $this->api_model->getUserList($id);
+		echo $this->encoding->utf8encode($this->encoding->convert_entities(str_replace('\\','%',$this->api_model->getUserList($id))));
 	}
 	
 	/*
-	¹¦ÄÜ£º»î¶¯¹ÜÀíÔ±ÒÆ³ýÓÃ»§
-	·½·¨£ºPOST /api/removeUser
-	²ÎÊý£ºid,username
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"status":["0","1"],"loginerror":["0","1"],"usernameerror":["0","1"]}
+	åŠŸèƒ½ï¼šæ´»åŠ¨ç®¡ç†å‘˜ç§»é™¤ç”¨æˆ·
+	æ–¹æ³•ï¼šPOST /api/removeUser
+	å‚æ•°ï¼šid,username
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"status":["0","1"],"loginerror":["0","1"],"usernameerror":["0","1"]}
 	*/	
 	public function removeUser()
 	{
@@ -436,16 +436,16 @@ class api extends CI_Controller {
 		{
 			$data['status']="0";
 		}
-		$this->api_model->userUnregister($id,$username); //´Ë´¦½èÓÃÓÃ»§ÍË³ö»î¶¯µÄº¯Êý£¬ÓÉÓÚÏÈÇ°ÒÑ¼ìÑécheckUserRegistered£¬¹Ê´Ë´¦userUnregisterµÄ·µ»ØÖµºöÂÔ(Òò²»¿ÉÄÜ·µ»Øfalse)
+		$this->api_model->userUnregister($id,$username); //æ­¤å¤„å€Ÿç”¨ç”¨æˆ·é€€å‡ºæ´»åŠ¨çš„å‡½æ•°ï¼Œç”±äºŽå…ˆå‰å·²æ£€éªŒcheckUserRegisteredï¼Œæ•…æ­¤å¤„userUnregisterçš„è¿”å›žå€¼å¿½ç•¥(å› ä¸å¯èƒ½è¿”å›žfalse)
 		$this->load->view('api/status',array("result" => json_encode($data)));
 	}
 	
 	/*
-	¹¦ÄÜ£º¼ì²éÓÃ»§ÊÇ·ñÔÚÒ»¸ö»î¶¯×¢²á
-	·½·¨£ºPOST /api/checkUser
-	²ÎÊý£ºid,username
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"status":["0","1"],"exist":["0","1",""]}
+	åŠŸèƒ½ï¼šæ£€æŸ¥ç”¨æˆ·æ˜¯å¦åœ¨ä¸€ä¸ªæ´»åŠ¨æ³¨å†Œ
+	æ–¹æ³•ï¼šPOST /api/checkUser
+	å‚æ•°ï¼šid,username
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"status":["0","1"],"exist":["0","1",""]}
 	*/	
 	public function checkUser()
 	{
@@ -459,7 +459,7 @@ class api extends CI_Controller {
 		else
 		{
 			$data['status']="0";
-			$r=$this->api_model->checkUserRegistered($id,$username); //´Ë´¦½èÓÃÆäËûÓÃ»§¹ÜÀí¹¦ÄÜËùÊ¹ÓÃµÄÒ»¸öÄÚ²¿º¯Êý
+			$r=$this->api_model->checkUserRegistered($id,$username); //æ­¤å¤„å€Ÿç”¨å…¶ä»–ç”¨æˆ·ç®¡ç†åŠŸèƒ½æ‰€ä½¿ç”¨çš„ä¸€ä¸ªå†…éƒ¨å‡½æ•°
 			if ($r==true)
 			{
 				$data['exist']="1";
@@ -473,11 +473,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£ºÆôÓÃ/½ûÓÃ»î¶¯µÄÊ±¼ä±íÄ£¿é
-	·½·¨£ºPOST /api/setModelTimetable
-	²ÎÊý£ºid,state
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
+	åŠŸèƒ½ï¼šå¯ç”¨/ç¦ç”¨æ´»åŠ¨çš„æ—¶é—´è¡¨æ¨¡å—
+	æ–¹æ³•ï¼šPOST /api/setModelTimetable
+	å‚æ•°ï¼šid,state
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
 	*/
 	public function setModelTimetable()
 	{
@@ -492,11 +492,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£ºÆôÓÃ/½ûÓÃ»î¶¯µÄÁÄÌìÊÒÄ£¿é
-	·½·¨£ºPOST /api/setModelChatroom
-	²ÎÊý£ºid,state
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
+	åŠŸèƒ½ï¼šå¯ç”¨/ç¦ç”¨æ´»åŠ¨çš„èŠå¤©å®¤æ¨¡å—
+	æ–¹æ³•ï¼šPOST /api/setModelChatroom
+	å‚æ•°ï¼šid,state
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
 	*/
 	public function setModelChatroom()
 	{
@@ -511,11 +511,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£ºÆôÓÃ/½ûÓÃ»î¶¯µÄÎ»ÖÃ¹²ÏíÄ£¿é
-	·½·¨£ºPOST /api/setModelLocation
-	²ÎÊý£ºid,state
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
+	åŠŸèƒ½ï¼šå¯ç”¨/ç¦ç”¨æ´»åŠ¨çš„ä½ç½®å…±äº«æ¨¡å—
+	æ–¹æ³•ï¼šPOST /api/setModelLocation
+	å‚æ•°ï¼šid,state
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
 	*/
 	public function setModelLocation()
 	{
@@ -530,11 +530,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£º²é¿´»î¶¯µÄÊ±¼ä±íÄ£¿é×´Ì¬
-	·½·¨£ºGET /api/getModelTimetable
-	²ÎÊý£ºid
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"state":["0","1"],"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
+	åŠŸèƒ½ï¼šæŸ¥çœ‹æ´»åŠ¨çš„æ—¶é—´è¡¨æ¨¡å—çŠ¶æ€
+	æ–¹æ³•ï¼šGET /api/getModelTimetable
+	å‚æ•°ï¼šid
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"state":["0","1"],"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
 	*/
 	public function getModelTimetable($id)
 	{
@@ -543,11 +543,11 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£º²é¿´»î¶¯µÄÁÄÌìÊÒÄ£¿é×´Ì¬
-	·½·¨£ºGET /api/getModelChatroom
-	²ÎÊý£ºid
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"state":["0","1"],"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
+	åŠŸèƒ½ï¼šæŸ¥çœ‹æ´»åŠ¨çš„èŠå¤©å®¤æ¨¡å—çŠ¶æ€
+	æ–¹æ³•ï¼šGET /api/getModelChatroom
+	å‚æ•°ï¼šid
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"state":["0","1"],"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
 	*/
 	public function getModelChatroom($id)
 	{
@@ -556,16 +556,105 @@ class api extends CI_Controller {
 	}
 	
 	/*
-	¹¦ÄÜ£º²é¿´»î¶¯µÄÎ»ÖÃ¹²ÏíÄ£¿é×´Ì¬
-	·½·¨£ºGET /api/getModelLocation
-	²ÎÊý£ºid
-	·µ»ØÀàÐÍ£ºjson
-	·µ»ØÄÚÈÝ£º{"state":["0","1"],"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
+	åŠŸèƒ½ï¼šæŸ¥çœ‹æ´»åŠ¨çš„ä½ç½®å…±äº«æ¨¡å—çŠ¶æ€
+	æ–¹æ³•ï¼šGET /api/getModelLocation
+	å‚æ•°ï¼šid
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"state":["0","1"],"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]}
 	*/
 	public function getModelLocation($id)
 	{
 		$r=$this->api_model->getModelLocation($id);
 		$this->load->view('api/status',array("result" => $r));
+	}
+	
+	/*
+	åŠŸèƒ½ï¼šç”¨æˆ·æ·»åŠ å¯ç”¨æ—¶é—´
+	æ–¹æ³•ï¼šPOST /api/addAvailableTime
+	å‚æ•°ï¼šid,time1,time2
+	è¿”å›žç±»åž‹ï¼šjson
+	è¿”å›žå†…å®¹ï¼š{"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"],"timeerror":["0","1"]}
+	*/
+	public function addAvailableTime()
+	{
+		$id=$this->input->post('id');
+		$time1=$this->input->post('time1');
+		$time2=$this->input->post('time2');
+		if ($this->api_model->checkActivityID($id)==false)
+		{
+			$data['iderror']="1";
+		}
+		else
+		{
+			$data['iderror']="0";
+		}
+		if ($this->api_model->checkUserLoggedIn($id)==false)
+		{
+			$data['loginerror']="1";
+		}
+		else
+		{
+			$data['loginerror']="0";
+		}
+		if (intval($time1)<intval($time2) && intval($time1)>0 && intval($time2)>0)
+		{
+			$data['timeerror']="0";
+		}
+		else
+		{
+			$data['timeerror']="1";
+		}
+		if ($data['iderror']=="1"||$data['loginerror']=="1"||$data['timeerror']=="1")
+		{
+			$data['status']="1";
+		}
+		else
+		{
+			$data['status']="0";
+			$this->api_model->addAvailableTime($id,$time1,$time2);
+		}
+		$this->load->view('api/status',array("result" => json_encode($data)));
+	}
+	
+	public function addUnavailableTime()
+	{
+		$id=$this->input->post('id');
+		$time1=$this->input->post('time1');
+		$time2=$this->input->post('time2');
+		if ($this->api_model->checkActivityID($id)==false)
+		{
+			$data['iderror']="1";
+		}
+		else
+		{
+			$data['iderror']="0";
+		}
+		if ($this->api_model->checkUserLoggedIn($id)==false)
+		{
+			$data['loginerror']="1";
+		}
+		else
+		{
+			$data['loginerror']="0";
+		}
+		if (intval($time1)<intval($time2) && intval($time1)>0 && intval($time2)>0)
+		{
+			$data['timeerror']="0";
+		}
+		else
+		{
+			$data['timeerror']="1";
+		}
+		if ($data['iderror']=="1"||$data['loginerror']=="1"||$data['timeerror']=="1")
+		{
+			$data['status']="1";
+		}
+		else
+		{
+			$data['status']="0";
+			$this->api_model->addUnavailableTime($id,$time1,$time2);
+		}
+		$this->load->view('api/status',array("result" => json_encode($data)));
 	}
 }
 ?>

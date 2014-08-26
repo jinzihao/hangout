@@ -46,6 +46,8 @@ $route['api'] = 'api';
 $route['api/(:any)'] = 'api/$1';
 $route['utils/(:any)'] = 'utils/$1';
 $route['default_controller'] = 'pages/view';
+$route['lab'] = 'lab';
+$route['lab/(:any)'] = 'lab/$1';
 $route['(:any)'] = 'pages/view/$1';
 
 

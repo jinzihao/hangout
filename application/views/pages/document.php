@@ -10,6 +10,7 @@
 <a href="http://hangout.org.cn/api/getSlug/%id%">getSlug/%id%</a>
 <a href="http://hangout.org.cn/api/adminLogout">adminLogout</a>
 <a href="http://hangout.org.cn/api/userLogout/%id%">userLogout/%id%</a>
+<a href="http://hangout.org.cn/api/getUserList/%id%">getUserList/%id%</a>
 <a href="http://hangout.org.cn/api/getModelTimetable/%id%">getModelTimetable/%id%</a>
 <a href="http://hangout.org.cn/api/getModelChatroom/%id%">getModelChatroom/%id%</a>
 <a href="http://hangout.org.cn/api/getModelLocation/%id%">getModelLocation/%id%</a>
@@ -104,15 +105,6 @@
 </div>
 
 <div class="well">
-<p>getUserList [adminLogin]/[userLogin]</p>
-<hr>
-<form method="post" action="http://hangout.org.cn/api/getUserList">
-<input name="id" placeholder="id"></input>
-<input type="submit"></input>
-</form>
-</div>
-
-<div class="well">
 <p>removeUser [adminLogin]</p>
 <hr>
 <form method="post" action="http://hangout.org.cn/api/removeUser">
@@ -158,6 +150,28 @@
 <form method="post" action="http://hangout.org.cn/api/setModelLocation">
 <input name="id" placeholder="id"></input>
 <input name="state" placeholder="state [0/1]"></input>
+<input type="submit"></input>
+</form>
+</div>
+
+<div class="well">
+<p>addAvailableTime [userLogin]</p>
+<hr>
+<form method="post" action="http://hangout.org.cn/api/AddAvailableTime">
+<input name="id" placeholder="id"></input>
+<input name="time1" placeholder="time1 [timestamp]"></input>
+<input name="time2" placeholder="time2 [timestamp]"></input>
+<input type="submit"></input>
+</form>
+</div>
+
+<div class="well">
+<p>addUnavailableTime [userLogin]</p>
+<hr>
+<form method="post" action="http://hangout.org.cn/api/AddUnavailableTime">
+<input name="id" placeholder="id"></input>
+<input name="time1" placeholder="time1 [timestamp]"></input>
+<input name="time2" placeholder="time2 [timestamp]"></input>
 <input type="submit"></input>
 </form>
 </div>

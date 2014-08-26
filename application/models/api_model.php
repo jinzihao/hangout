@@ -47,10 +47,6 @@ class api_model extends CI_Model {
 			'description' => ''
 		);
 	 $this->db->insert('model_info', $data);
-	 $data = array(
-			'userdata' => ''
-		);
-	 $this->db->insert('model_users', $data);
 	  return 0;
 	}
 	
@@ -59,29 +55,18 @@ class api_model extends CI_Model {
 	*/
 	public function joinActivity($id,$username,$password)
 	{
-		$row=$this->db->get_where('model_users',array('id' => $id))->result();
-		$currentUserData=$row[0]->userdata;
-		$currentUsernamesArray=explode("\r\n",$currentUserData);
-		$isDuplicate=0;
-		for($i=0;$i<(count($currentUsernamesArray)-1)/2;$i++)
-		{
-			if(stripos($currentUsernamesArray[$i*2],$username)!==false)
-			{
-				$isDuplicate=1;
-				break;
-			}
-			
-		}
-		if($isDuplicate==0)
+		$row=$this->db->get_where('model_users',array('id' => $id, 'username' => $username))->result();
+		if(count($row)==0)
 		{
 			$data = array(
-                	'userdata' => $currentUserData.$username."\r\n".sha1($password)."\r\n"
-                		);
-			$this->db->where('id',$id);
-      $this->db->update('model_users', $data);
+				'id' => $id,
+				'username' => $username,
+				'password' => sha1($password)
+			);
+      $this->db->insert('model_users', $data);
 			return 0;
 		}
-		elseif($isDuplicate==1)
+		else
 		{
 			return 1;
 		}
@@ -128,7 +113,7 @@ class api_model extends CI_Model {
 	*/
 	public function getActivityTitle($id)
 	{ 
-		if(checkActivityID($id)==false){return "";}
+		if($this->api_model->checkActivityID($id)==false){return "";}
 		$row=$this->db->get_where('activities', array('id' => $id))->result();
 		return $row[0]->title;
 	}
@@ -138,7 +123,7 @@ class api_model extends CI_Model {
 	*/
 	public function getActivityInfo($id)
 	{
-		if(checkActivityID($id)==false){return "";}
+		if($this->api_model->checkActivityID($id)==false){return "";}
 		$row=$this->db->get_where('model_info', array('id' => $id))->result(); 
 		return $row[0]->description;
 	}
@@ -218,17 +203,15 @@ class api_model extends CI_Model {
 	*/
 	public function checkUserPassword($id,$username,$password)
 	{
-		$row=$this->db->get_where('model_users', array('id' => $id))->result();
-		$userdata=$row[0]->userdata;
-		$userarr=explode("\r\n",$userdata);
-		for($i=0;$i<=count($userarr)-1;$i++)
+		$row=$this->db->get_where('model_users', array('id' => $id, 'username' => $this->encoding->utf8encode($this->encoding->convert_entities(str_replace('\\','%',$username))), 'password' => sha1($password)))->result();
+		if(count($row)>0)
 		{
-			if($userarr[$i]==$this->encoding->utf8encode($this->encoding->convert_entities(str_replace('\\','%',$username))) && $userarr[$i+1]==sha1($password))
-			{
-				return true;
-			}
+			return true;
 		}
+		else
+		{
 			return false;
+		}
 	}
 	
 	/*
@@ -251,17 +234,15 @@ class api_model extends CI_Model {
 	*/
 	public function checkUserRegistered($id,$username)
 	{
-		$row=$this->db->get_where('model_users', array('id' => $id))->result();
-		$userdata=$row[0]->userdata;
-		$userarr=explode("\r\n",$userdata);
-		for($i=0;$i<=count($userarr)-1;$i=$i+2)
+		$row=$this->db->get_where('model_users', array('id' => $id, 'username' => $this->encoding->utf8encode($this->encoding->convert_entities(str_replace('\\','%',$username)))))->result();
+		if(count($row)>0)
 		{
-			if($userarr[$i]==$this->encoding->utf8encode($this->encoding->convert_entities(str_replace('\\','%',$username))))
-			{
-				return true;
-			}
+			return true;
 		}
-		return false;
+		else
+		{
+			return false;
+		}
 	}
 	
 	/*
@@ -269,24 +250,15 @@ class api_model extends CI_Model {
 	*/
 	public function userUnregister($id,$username)
 	{
-		$row=$this->db->get_where('model_users', array('id' => $id))->result();
-		$userdata=$row[0]->userdata;
-		$userarr=explode("\r\n",$userdata);
-		for($i=0;$i<=count($userarr)-1;$i++)
+		if($this->api_model->checkUserRegistered($id,$username)==true)
 		{
-			if($userarr[$i]==$this->encoding->utf8encode($this->encoding->convert_entities(str_replace('\\','%',$username))))
-			{
-				array_splice($userarr,$i,2);
-				$userdata=implode("\r\n",$userarr)."\r\n";
-				$data = array(
-					'userdata' => $userdata
-				);
-				$this->db->where('id',$id);
-  			$this->db->update('model_users', $data);
-				return true;
-			}
+			$row=$this->db->delete('model_users', array('id' => $id, 'username' => $this->encoding->utf8encode($this->encoding->convert_entities(str_replace('\\','%',$username)))));
+			return true;
 		}
-		return false;
+		else
+		{
+			return false;
+		}
 	}
 	
 	/*
@@ -296,21 +268,18 @@ class api_model extends CI_Model {
 	{
 		if($this->api_model->checkAdminLoggedIn($id)==true || $this->api_model->checkUserLoggedIn($id)==true)
 		{
-			$result="";
 			$row=$this->db->get_where('model_users', array('id' => $id))->result();
-			$userdata=$row[0]->userdata;
-			$userarr=explode("\r\n",$userdata);
-			for($i=0;$i<=count($userarr)-1;$i=$i+2)
+			for($i=0;$i<=count($row)-1;$i++)
 			{
-				$json[$i/2+1]=$userarr[$i];
+				$data[$i]=$this->encoding->utf8encode($this->encoding->convert_entities(str_replace('\\','%',$row[$i]->username)));
 			}
-			$json['status']="0";
+			$data['status']="0";
 		}
 		else
 		{
-			$json['status']="1";
+			$data['status']="1";
 		}
-		return json_encode($json);
+		return json_encode($data);
 	}
 	
 	/*
@@ -524,5 +493,37 @@ class api_model extends CI_Model {
 		$row=$this->db->get_where('activities', array('id' => $id))->result(); 
 		$data['state']=$row[0]->model_location;
 		return json_encode($data);
+	}
+	
+	/*
+	用户增加可用时间
+	*/
+	public function addAvailableTime($id,$time1,$time2)
+	{
+		$data = array(
+			'id' => $id,
+			'username' => $this->session->userdata('activity'.$id),
+			'available' => 1,
+			'time1' => $time1,
+			'time2' => $time2
+		);
+		$this->db->insert('model_timetable', $data);
+    return true;
+	}
+	
+	/*
+	用户增加不可用时间
+	*/
+	public function addUnavailableTime($id,$time1,$time2)
+	{
+		$data = array(
+			'id' => $id,
+			'username' => $this->session->userdata('activity'.$id),
+			'available' => 0,
+			'time1' => $time1,
+			'time2' => $time2
+		);
+		$this->db->insert('model_timetable', $data);
+    return true;
 	}
 }

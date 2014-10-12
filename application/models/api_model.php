@@ -406,15 +406,15 @@ class api_model extends CI_Model {
 		{
 			$data['iderror']="0";
 		}
-		if($this->api_model->checkAdminLoggedIn($id)==false||$this->api_model->checkUserLoggedIn($id)==false)
+		if($this->api_model->checkAdminLoggedIn($id)==false&&$this->api_model->checkUserLoggedIn($id)==false)
 		{
-			$data['loginError']="1";
+			$data['loginerror']="1";
 		}
 		else
 		{
-			$data['loginError']="0";
+			$data['loginerror']="0";
 		}
-		if($data['iderror']="1"||$data['loginerror']="1")
+		if($data['iderror']=="1"||$data['loginerror']=="1")
 		{
 			$data['status']="1";
 		}
@@ -440,15 +440,15 @@ class api_model extends CI_Model {
 		{
 			$data['iderror']="0";
 		}
-		if($this->api_model->checkAdminLoggedIn($id)==false||$this->api_model->checkUserLoggedIn($id)==false)
+		if($this->api_model->checkAdminLoggedIn($id)==false&&$this->api_model->checkUserLoggedIn($id)==false)
 		{
-			$data['loginError']="1";
+			$data['loginerror']="1";
 		}
 		else
 		{
-			$data['loginError']="0";
+			$data['loginerror']="0";
 		}
-		if($data['iderror']="1"||$data['loginerror']="1")
+		if($data['iderror']=="1"||$data['loginerror']=="1")
 		{
 			$data['status']="1";
 		}
@@ -474,15 +474,15 @@ class api_model extends CI_Model {
 		{
 			$data['iderror']="0";
 		}
-		if($this->api_model->checkAdminLoggedIn($id)==false||$this->api_model->checkUserLoggedIn($id)==false)
+		if($this->api_model->checkAdminLoggedIn($id)==false&&$this->api_model->checkUserLoggedIn($id)==false)
 		{
-			$data['loginError']="1";
+			$data['loginerror']="1";
 		}
 		else
 		{
-			$data['loginError']="0";
+			$data['loginerror']="0";
 		}
-		if($data['iderror']="1"||$data['loginerror']="1")
+		if($data['iderror']=="1"||$data['loginerror']=="1")
 		{
 			$data['status']="1";
 		}
@@ -549,5 +549,89 @@ class api_model extends CI_Model {
 			$this->db->insert('model_timetable', $data);
 	    return true;
 	  }
+	}
+	
+	/*
+	用户查询可用时间
+	*/
+	public function getAvailableTime($id)
+	{
+		if ($this->api_model->checkActivityID($id)==false)
+		{
+			$data['iderror']="1";
+		}
+		else
+		{
+			$data['iderror']="0";
+		}
+		if ($this->api_model->checkUserLoggedIn($id)==false)
+		{
+			$data['loginerror']="1";
+		}
+		else
+		{
+			$data['loginerror']="0";
+		}
+		if ($data['iderror']=="1"||$data['loginerror']=="1")
+		{
+			$data['status']="1";
+		}
+		else
+		{
+			$data['status']="0";
+			$this->db->where('id', $id); 
+			$this->db->where('available', 1); 
+			$this->db->where('username', $this->session->userdata('activity'.$id)); 
+			$row = $this->db->get('model_timetable')->result();
+			$i=0;
+			foreach ($row as $time)
+			{
+				$i=$i+1;
+				$data[$i]=$time->time1.",".$time->time2;
+			}
+		}
+		return json_encode($data);
+	}
+	
+	/*
+	用户查询不可用时间
+	*/
+	public function getUnavailableTime($id)
+	{
+		if ($this->api_model->checkActivityID($id)==false)
+		{
+			$data['iderror']="1";
+		}
+		else
+		{
+			$data['iderror']="0";
+		}
+		if ($this->api_model->checkUserLoggedIn($id)==false)
+		{
+			$data['loginerror']="1";
+		}
+		else
+		{
+			$data['loginerror']="0";
+		}
+		if ($data['iderror']=="1"||$data['loginerror']=="1")
+		{
+			$data['status']="1";
+		}
+		else
+		{
+			$data['status']="0";
+			$this->db->where('id', $id); 
+			$this->db->where('available', 0); 
+			$this->db->where('username', $this->session->userdata('activity'.$id)); 
+			$row = $this->db->get('model_timetable')->result();
+			$i=0;
+			foreach ($row as $time)
+			{
+				$i=$i+1;
+				$data[$i]=$time->time1.",".$time->time2;
+			}
+		}
+		return json_encode($data);
 	}
 }

@@ -332,7 +332,7 @@ class api extends CI_Controller {
 		}
 		else
 		{
-			$data['status']=$this->api_model->checkUserPassword($id,$username,$password);
+			$data['status']="1";
 		}
 		$this->load->view('api/status',array("result" => json_encode($data)));
 	}
@@ -573,7 +573,7 @@ class api extends CI_Controller {
 	方法：POST /api/addAvailableTime
 	参数：id,time1,time2
 	返回类型：json
-	返回内容：{"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"],"timeerror":["0","1"]}
+	返回内容：{"status":["0","1","2"],"iderror":["0","1"],"loginerror":["0","1"],"timeerror":["0","1"]}
 	*/
 	public function addAvailableTime()
 	{
@@ -624,6 +624,13 @@ class api extends CI_Controller {
 		$this->load->view('api/status',array("result" => json_encode($data)));
 	}
 	
+	/*
+	功能：用户添加不可用时间
+	方法：POST /api/addUnavailableTime
+	参数：id,time1,time2
+	返回类型：json
+	返回内容：{"status":["0","1","2"],"iderror":["0","1"],"loginerror":["0","1"],"timeerror":["0","1"]}
+	*/
 	public function addUnavailableTime()
 	{
 		$id=$this->input->post('id');
@@ -670,6 +677,32 @@ class api extends CI_Controller {
 			}
 		}
 		$this->load->view('api/status',array("result" => json_encode($data)));
+	}
+	
+	/*
+	功能：用户获取可用时间
+	方法：GET /api/getAvailableTime
+	参数：id
+	返回类型：json
+	返回内容：{"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]
+	*/
+	public function getAvailableTime($id)
+	{
+		$r=$this->api_model->getAvailableTime($id);
+		$this->load->view('api/status',array("result" => $r));
+	}
+	
+	/*
+	功能：用户获取不可用时间
+	方法：GET /api/getUnavailableTime
+	参数：id
+	返回类型：json
+	返回内容：{"status":["0","1"],"iderror":["0","1"],"loginerror":["0","1"]
+	*/
+	public function getUnavailableTime($id)
+	{
+		$r=$this->api_model->getUnavailableTime($id);
+		$this->load->view('api/status',array("result" => $r));
 	}
 }
 ?>
